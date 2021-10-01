@@ -1,0 +1,13 @@
+﻿<Window x:Class="Diplomski.LogoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        
+        Title="LogoWindow" Height="419.5" Width="332.167" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="Transparent" AllowsTransparency="True" Foreground="{x:Null}">
+    <Grid>
+        <Grid HorizontalAlignment="Left" Height="122" Margin="4,157,0,0" VerticalAlignment="Top" Width="323" Background="{DynamicResource PrimaryHueMidBrush}"/>
+        <Image HorizontalAlignment="Left" VerticalAlignment="Top" Source="Images/logo.png" OpacityMask="White"/>
+    </Grid>
+</Window>

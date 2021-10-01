@@ -1,0 +1,886 @@
+﻿<Window x:Class="Diplomski.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Diplomski"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="720" Width="1280" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen">
+
+    <!-- VISUAL_DESIGN_STYLES -->
+    <Window.Resources>
+        <ResourceDictionary>
+            <!-- BUTTON_STYLES -->
+            <Style TargetType="Button" x:Key="btnLeft">
+                <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="FontSize" Value="15" />
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border CornerRadius="5" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}">
+                                <Grid>
+                                    <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" />
+                                </Grid>
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}" />
+                                </Trigger>
+
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="Button" x:Key="btnCenter">
+                <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="FontSize" Value="15" />
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border CornerRadius="5" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}">
+                                <Grid>
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}" />
+                                </Trigger>
+
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- SCROLL_BAR_DESIGN -->
+            <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Grid x:Name="Grid">
+                                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent"/>
+                                <Border x:Name="Rectangle1" CornerRadius="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Background="{TemplateBinding Background}"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="Tag" Value="Horizontal">
+                                    <Setter TargetName="Rectangle1" Property="Width" Value="Auto"/>
+                                    <Setter TargetName="Rectangle1" Property="Height" Value="7"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+                <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Width" Value="10"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+                            <Grid x:Name="GridRoot" Width="12" Background="{x:Null}">
+                                <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="True" Focusable="False">
+                                    <Track.Thumb>
+                                        <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" Style="{DynamicResource ScrollThumbs}"/>
+                                    </Track.Thumb>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                    </Track.DecreaseRepeatButton>
+                                </Track>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger SourceName="Thumb" Property="IsMouseOver" Value="True">
+                                    <Setter Value="{DynamicResource ButtonSelectBrush}" TargetName="Thumb" Property="Background"/>
+                                </Trigger>
+                                <Trigger SourceName="Thumb" Property="IsDragging" Value="True">
+                                    <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
+                                </Trigger>
+
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="Orientation" Value="Horizontal">
+                                    <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="-90"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="-90"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Width" Value="Auto"/>
+                                    <Setter Property="Height" Value="12"/>
+                                    <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
+                                    <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
+                                    <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageRightCommand"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid x:Name="mainGrid" Background="#FF0B0B0B">
+        <materialDesign:DialogHost>
+            
+            <!-- DRAWER_HOST_LEFT_AND_RIGHT -->
+            <materialDesign:DrawerHost HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="2" BorderBrush="{DynamicResource MaterialDesignDivider}" Height="724" Width="1284" Margin="0" BottomDrawerCloseOnClickAway="False">
+
+                <!-- DRAWER_HOST -->
+                <materialDesign:DrawerHost.Style>
+                    <Style TargetType="materialDesign:DrawerHost" BasedOn="{StaticResource {x:Type materialDesign:DrawerHost}}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked}" Value="True">
+                                <Setter Property="OverlayBackground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </materialDesign:DrawerHost.Style>
+                
+                <!-- DRAWER_RIGHT -->
+                <materialDesign:DrawerHost.RightDrawerContent>
+                    <Grid Background="{DynamicResource PrimaryHueDarkBrush}">
+                        <StackPanel Width="350" Background="#FF111111" MouseDown="headerPanel_MouseDown" Margin="3">
+                            <TextBlock Text="Change Score:" Margin="30,40,15,0" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                            <ComboBox x:Name="cbChangeScore" Height="40" FontSize="16" FontWeight="Medium" Padding="6,6,5,3" SelectedIndex="0" VerticalContentAlignment="Stretch" Margin="15,0" MaxDropDownHeight="400" Foreground="White">
+                                <ComboBoxItem Content="No Score" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(1) Appalling" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(2) Horrible" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(3) Very Bad" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(4) Bad" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(5) Average" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(6) Fine" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(7) Good" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(8) Very Good" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(9) Great" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="(10) Masterpiece" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            </ComboBox>
+
+                            <TextBlock Text="Change Status:" Margin="30,30,15,0" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                            <ComboBox x:Name="cbChangeStatus" Height="40" FontSize="16" FontWeight="Medium" Padding="6,6,5,3" SelectedIndex="0" VerticalContentAlignment="Stretch" Margin="15,0" MaxDropDownHeight="400" Foreground="White">
+                                <ComboBoxItem Content="Currently Watching" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="Completed" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="On-Hold" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="Dropped" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <ComboBoxItem Content="Plan to Watch" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            </ComboBox>
+
+                            <StackPanel Orientation="Horizontal" Height="40" Margin="0,50,0,0">
+                                <Button x:Name="btnDeleteRowFromList" Style="{DynamicResource btnCenter}" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" Content="DELETE" VerticalAlignment="Top" Click="btnDeleteRowFromList_Click" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="10,0,1,0" Width="164"/>
+                                <Button x:Name="btnViewSelectedAnimeFromList" Style="{DynamicResource btnCenter}" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" Content="VIEW" VerticalAlignment="Top" Click="btnViewSelectedAnimeFromList_Click" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="1,0,10,0" Width="164"/>
+                            </StackPanel>
+                            <Button x:Name="btnSaveChanges" Style="{DynamicResource btnCenter}" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" Content="SAVE" VerticalAlignment="Top" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="10,2,10,0" Click="btnSaveChanges_Click"/>
+
+                            <StackPanel x:Name="spForPb" Margin="20,90,0,0" Width="300" >
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="10" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb10" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb10" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="9" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb9" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb9" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="8" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb8" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb8" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="7" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb7" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb7" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="6" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb6" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb6" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="5" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb5" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb5" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="4" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb4" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb4" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                                    <TextBlock Text="3" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb3" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb3" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="2" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb2" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb2" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="1" FontSize="16" FontWeight="Medium" Width="15" Foreground="White"/>
+                                    <ProgressBar x:Name="pb1" Height="20" Background="{x:Null}" BorderBrush="{x:Null}" Width="200" Margin="15,0,0,0"/>
+                                    <TextBlock x:Name="tbpb1" FontSize="16" FontWeight="Medium" Margin="10,0,0,0" Foreground="White"/>
+                                </StackPanel>
+                                <TextBlock x:Name="tbpbInformation" Margin="10,15,30,0" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left" Foreground="White"/>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:DrawerHost.RightDrawerContent>
+
+                <!-- DRAWER_TOP -->
+                <materialDesign:DrawerHost.TopDrawerContent>
+                    <Grid Background="{DynamicResource PrimaryHueDarkBrush}" Height="660" Width="1280" MouseDown="headerPanel_MouseDown">
+                        <Grid Margin="3" Background="{DynamicResource PrimaryHueDarkBrush}">
+                            <StackPanel Orientation="Horizontal">
+
+                                <DataGrid x:Name="myLists" ItemsSource="{Binding}" IsReadOnly="True" FontWeight="Medium" FontSize="16" Background="#FF111111" HorizontalScrollBarVisibility="Disabled" Focusable="False" CanUserResizeColumns="False" BorderBrush="{x:Null}" SelectionMode="Single" Height="654" Width="1000" HorizontalAlignment="Left" CanUserSortColumns="False" SelectionChanged="myLists_SelectionChanged" CanUserReorderColumns="False" CanUserResizeRows="False" PreviewMouseDoubleClick="myLists_PreviewMouseDoubleClick">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="List Name" Binding="{Binding Listname}" Width="500"/>
+                                        <DataGridTextColumn Header="Anime Count" Binding="{Binding Count}" Width="200"/>
+                                        <DataGridTextColumn Header="Last Time Used" Binding="{Binding Date}" Width="300"/>
+                                        <DataGridTextColumn Header="path" Binding="{Binding path}" Width="100" Visibility="Collapsed"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <StackPanel Orientation="Vertical" Width="271" Background="#FF111111" Margin="3,0,0,0">
+                                    <Button x:Name="btnTopDrawerOpen" Style="{DynamicResource btnCenter}" Content="OPEN" HorizontalAlignment="Center" VerticalAlignment="Top" Width="250" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="0,30,0,0" Click="btnTopDrawerOpen_Click"/>
+                                    <Button x:Name="btnTopDrawerDelete" Style="{DynamicResource btnCenter}" Content="DELETE" HorizontalAlignment="Center" VerticalAlignment="Top" Width="250" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="0,5,0,0" Click="btnTopDrawerDelete_Click"/>
+                                    <Button x:Name="btnTopDrawerRename" Style="{DynamicResource btnCenter}" Content="RENAME" HorizontalAlignment="Center" VerticalAlignment="Top" Width="250" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="0,5,0,0" Click="btnTopDrawerRename_Click"/>
+                                    <TextBox x:Name="tbRename" materialDesign:HintAssist.Hint="Enter New Filename" Width="250" FontSize="16" FontWeight="Medium" Margin="0,10" Foreground="White" Padding="5,0,0,0"/>
+                                    
+                                    <Button x:Name="btnTopDrawerCreateList" Style="{DynamicResource btnCenter}" Content="CREATE NEW LIST" HorizontalAlignment="Center" VerticalAlignment="Top" Width="250" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="0,80,0,0"  Click="btnCreateList_Click" />
+                                    <Button x:Name="btnTopDrawerImport" Style="{DynamicResource btnCenter}" Content="IMPORT MAL" HorizontalAlignment="Center" VerticalAlignment="Top" Width="250" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="0,5,0,0" Click="btnImport_Click"/>
+                                    <TextBox x:Name="importUsername" materialDesign:HintAssist.Hint="MyAnimeList.net Username" Width="250" FontSize="16" FontWeight="Medium" Margin="0,10" Foreground="White" Padding="5,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </materialDesign:DrawerHost.TopDrawerContent>
+
+                <Grid>
+                    <!-- NOTIFICATION -->
+                    <Grid x:Name="notificationGrid" Margin="23,0,100,-65"  VerticalAlignment="Bottom" Panel.ZIndex="1" IsHitTestVisible="False" Background="Black" Grid.Column="1" >
+                        <StackPanel Background="{DynamicResource PrimaryHueDarkBrush}" Margin="1" >
+                            <TextBlock x:Name="notificationText" Text="TEXT" Margin="5,15" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Medium" MaxWidth="1050" Foreground="White"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- TOP_DRAGGABLE_PANEL -->
+                    <Grid x:Name="headerPanel" Height="42" VerticalAlignment="Top" Panel.ZIndex="1" Margin="944,0,0,0">
+                        <ComboBox x:Name="themePicker" materialDesign:HintAssist.Hint="Select Theme" Height="36" SelectionChanged="themePicker_SelectionChanged" FontSize="16" FontWeight="Medium" Padding="10,7,5,0" VerticalContentAlignment="Stretch" MaxDropDownHeight="224" Foreground="White" Margin="0,4,134,2" BorderBrush="{x:Null}" Background="#FF232323" Cursor="Hand">
+                            <ComboBoxItem Background="#801ca4" Content="Purple Heart" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#383c9c" Content="Blue Gem" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#1c74d4" Content="Denim" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#0288d1" Content="Pacific Blue" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#0097a7" Content="Eastern Blue" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#00796b" Content="Pine Green" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#388e3c" Content="Japanese Laurel" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#689f38" Content="Sushi" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#d32f2f" Content="Persian Red" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#c41c5c" Content="Cardinal" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#5d4037" Content="Very Dark Brown" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#f57c00" Content="Tangerine" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#fbc02d" Content="Sunglow" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            <ComboBoxItem Background="#afb42b" Content="Earls Green" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                        </ComboBox>
+
+                        <!-- SEARCH -->
+                        <Label x:Name="lbHeader" HorizontalAlignment="Left" FontSize="24" FontWeight="SemiBold" Width="0" Margin="0,0,0,-1" Height="52" VerticalContentAlignment="Center"/>
+                        <materialDesign:ColorZone x:Name="searchBarExpander" Mode="Standard" Padding="8 4 8 4" CornerRadius="2" Margin="0,3,80,1" materialDesign:ShadowAssist.ShadowDepth="Depth1" HorizontalAlignment="Right" VerticalAlignment="Center" Background="White" Height="38" MaxWidth="262" Width="50">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="btnSearchIcon" Style="{DynamicResource MaterialDesignToolButton}" Height="38" Margin="-4,-4,0,-4" Click="btnSearchIcon_Click" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top" Width="39">
+                                    <materialDesign:PackIcon Kind="Search" Foreground="#CC000000" Height="32" Width="35" RenderTransformOrigin="0.3,0.38" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0" Background="#02000000"/>
+                                </Button>
+                                <TextBox x:Name="searchTextBox" Grid.Column="1" materialDesign:HintAssist.Hint="Find Anime..." materialDesign:TextFieldAssist.DecorationVisibility="Hidden" BorderThickness="0" VerticalAlignment="Center" FontWeight="Medium" PreviewKeyDown="searchTextBox_PreviewKeyDown" Foreground="#DD000000" HorizontalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="16" Width="214" Height="38" Padding="0" Margin="5,-4,-8,-4" Grid.ColumnSpan="2" Cursor="IBeam" />
+                            </Grid>
+                        </materialDesign:ColorZone>
+                        <Button x:Name="btnExit" Content="EXIT" Margin="0,3,4,1" Style="{DynamicResource btnCenter}" Height="Auto" BorderBrush="{x:Null}" Foreground="White" Background="#FF3A3B3C" FontWeight="Bold" FontSize="16" HorizontalAlignment="Right" Click="btnExit_Click" Width="72" Cursor="Hand"/>
+                        <Button x:Name="btnRetry" Content="RETRY" Margin="-90,3,339,1" Style="{DynamicResource btnCenter}" Height="Auto" BorderBrush="{x:Null}" Foreground="White" Background="#FF3A3B3C" FontWeight="Bold" FontSize="16" HorizontalAlignment="Right" Width="87" Cursor="Hand" Click="btnRetry_Click" Visibility="Hidden"/>
+                    </Grid>
+
+                    <!-- TAB_CONTROL -->
+                    <TabControl x:Name="mainTab" HorizontalAlignment="Left" Margin="2,0,0,0" VerticalAlignment="Top" Background="black" BorderBrush="{x:Null}" BorderThickness="0" Width="1276" Height="718" MouseDown="headerPanel_MouseDown">
+
+                        <!-- HEADER_TAB_STYLE -->
+                        <TabControl.Resources>
+                            <Style TargetType="TabItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TabItem">
+                                            <Border Name="Border" BorderThickness="0,0,1,0" BorderBrush="Black" Margin="0,0" Cursor="Hand">
+                                                <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="False">
+                                                    <Setter TargetName="Border" Property="Background" Value="#3a3b3c" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </TabControl.Resources>
+
+                        <!-- HOME_TAB -->
+                        <TabItem x:Name="tabHome" Header="HOME" Margin="-2,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" Width="100" Height="40" PreviewMouseLeftButtonUp="btnHome_Click" FontSize="16">
+                            <ScrollViewer x:Name="sv" Background="Black" VerticalScrollBarVisibility="Hidden" Margin="-4,0,-4,-2">
+                                <Grid x:Name="mainGridBackground" Background="#FF171717" Width="1282">
+                                    <StackPanel x:Name="searchResultsStackPanel" Margin="8,0,0,0" Orientation="Vertical"/>
+                                    <Image x:Name="welcomeImage" HorizontalAlignment="Left" VerticalAlignment="Top" Source="Images/bg.png" Stretch="UniformToFill" Height="537" Width="952" Margin="35,22,0,0"></Image>
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <!-- SEARCH_TAB -->
+                        <TabItem x:Name="tabSearch" Header="SEARCH" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" Width="100" Height="40" FontSize="16" Margin="-2,0,0,0">
+                            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF111111" Width="1282" Height="676" Margin="-2,0,-8,-4">
+                                <Border CornerRadius="50,50,0,0" Background="#FF2B2B2B" Margin="90,42,90,0">
+                                    <Grid>
+                                        <!-- LEFT_SIDE_COMBOBOXES -->
+                                        <Label Content="ADVANCED SEARCH" Margin="368,26,369,554" FontSize="36" HorizontalAlignment="Center" Width="365"/>
+
+                                        <ComboBox x:Name="startYearComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="348" Margin="134,357,0,0" FontWeight="Medium" Background="Transparent" FontSize="16" Padding="8,6,0,6" BorderThickness="0,0,0,2" Foreground="White" IsTabStop="False" materialDesign:HintAssist.Hint="Select Start Year"/>
+                                        <ComboBox x:Name="endYearComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="348" Margin="134,401,0,0" FontWeight="Medium" Background="Transparent" FontSize="16" Padding="8,6,1,6" BorderThickness="0,0,0,2" Foreground="White" IsTabStop="False" materialDesign:HintAssist.Hint="Select End Year"/>
+                                        <ComboBox x:Name="typeComboBox" materialDesign:HintAssist.Hint="Select Type" HorizontalAlignment="Left" VerticalAlignment="Top" Width="348" Margin="134,177,0,0" FontWeight="Medium" Background="Transparent" FontSize="16" Padding="8,6,0,6" BorderThickness="0,0,0,2" Foreground="White" IsTabStop="False">
+                                            <ComboBoxItem Content="TV"/>
+                                            <ComboBoxItem Content="Movie"/>
+                                            <ComboBoxItem Content="ONA"/>
+                                            <ComboBoxItem Content="OVA"/>
+                                            <ComboBoxItem Content="Special"/>
+                                            <ComboBoxItem Content="Music"/>
+                                        </ComboBox>
+                                        <ComboBox x:Name="statusComboBox" materialDesign:HintAssist.Hint="Select Status" HorizontalAlignment="Left" VerticalAlignment="Top" Width="348" Margin="134,221,0,0" FontWeight="Medium" Background="Transparent" FontSize="16" Padding="8,6,0,6" BorderThickness="0,0,0,2" Foreground="White" IsTabStop="False">
+                                            <ComboBoxItem Content="Completed"/>
+                                            <ComboBoxItem Content="Airing"/>
+                                            <ComboBoxItem Content="To be Aired"/>
+                                        </ComboBox>
+                                        <ComboBox x:Name="ratedComboBox" materialDesign:HintAssist.Hint="Select Rating" HorizontalAlignment="Left" VerticalAlignment="Top" Width="348" Margin="134,265,0,0" FontWeight="Medium" Background="Transparent" FontSize="16" Padding="8,6,0,6" BorderThickness="0,0,0,2" Foreground="White" IsTabStop="False">
+                                            <ComboBoxItem Content="G - All Ages"/>
+                                            <ComboBoxItem Content="PG - Children"/>
+                                            <ComboBoxItem Content="PG-13 - Teens 13 or older"/>
+                                            <ComboBoxItem Content="R17 - 17+ recommended"/>
+                                            <ComboBoxItem Content="R+ - Mild Nudity"/>
+                                            <ComboBoxItem Content="Rx - Sexual Content/Nudity"/>
+                                        </ComboBox>
+
+                                        <!-- RIGHT_SIDE_GENRES -->
+                                        <Grid Grid.Column="0" Grid.Row="0" x:Name="CheckBoxSearchPanel" HorizontalAlignment="Left" Width="470" Margin="539,147,0,0" VerticalAlignment="Top">
+
+                                            <!-- 11_ROWS_FOR_GENRE -->
+                                            <StackPanel Orientation="Horizontal">
+                                                <CheckBox x:Name="_1" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Action" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_2" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Adventure" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_3" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Cars" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_4" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Comedy" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 32, 0, 0">
+                                                <CheckBox x:Name="_5" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Dementia" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_6" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Demons" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_7" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Mystery" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_8" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Drama" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 64, 0, 0">
+                                                <CheckBox x:Name="_9" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Ecchi" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_10" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Fantasy" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_11" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Game" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_12" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Hentai" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 96, 0, 0">
+                                                <CheckBox x:Name="_13" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Historical" HorizontalAlignment="Left" VerticalAlignment="Top"  FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_14" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Horror" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_15" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Kids" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_16" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Magic" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 128, 0, 0">
+                                                <CheckBox x:Name="_17" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Martial Arts" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_18" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Mecha" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_19" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Music" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_20" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Parody" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 160, 0, 0">
+                                                <CheckBox x:Name="_21" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Samurai" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_22" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Romance" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_23" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="School" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_24" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Sci Fi" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 192, 0, 0">
+                                                <CheckBox x:Name="_25" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Shoujo" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_26" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Shoujo Ai" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_27" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Shounen" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_28" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Shounen Ai" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 224, 0, 0">
+                                                <CheckBox x:Name="_29" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Space" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_30" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Sports" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_31" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Super Power" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_32" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Vampire" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 256, 0, 0">
+                                                <CheckBox x:Name="_33" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Yaoi" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_34" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Yuri" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_35" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Harem" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_36" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Slice of Life" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 288, 0, 0">
+                                                <CheckBox x:Name="_37" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Supernatural" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_38" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Military" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_39" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Police" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 320, 0, 0">
+                                                <CheckBox x:Name="_40" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Psychological" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_41" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Thriller" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_42" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Seinen" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                                <CheckBox x:Name="_43" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Josei" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" BorderBrush="{x:Null}" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" FontWeight="Medium"/>
+                                            </StackPanel>
+
+                                        </Grid>
+                                        <!-- OTHER_ELEMENTS -->
+                                        <CheckBox x:Name="excludeComboBox" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Content="Exclude the selected genres?" HorizontalAlignment="Left" Margin="557,104,0,0" VerticalAlignment="Top" FontSize="20" Height="28" FontWeight="Medium" Foreground="White" Background="{DynamicResource PrimaryHueDarkBrush}" BorderBrush="{x:Null}"/>
+                                        <Button Content="SEARCH" Margin="347,0,519,45" Style="{DynamicResource btnCenter}" FontWeight="Bold" Click="searchButton_Click" FontSize="18" HorizontalContentAlignment="Center" VerticalAlignment="Bottom" Height="50" BorderThickness="2" HorizontalAlignment="Center" Width="236" Foreground="White" BorderBrush="Black"/>
+                                        <Button x:Name="btnResetFilter" Content="RESET" Margin="589,0,391,45" Style="{DynamicResource btnCenter}" FontWeight="Bold" FontSize="18" HorizontalContentAlignment="Center" VerticalAlignment="Bottom" Height="50" BorderThickness="2" HorizontalAlignment="Center" Width="122" Foreground="White" BorderBrush="Black" Click="btnResetFilter_Click"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- MY_LIST_TAB -->
+                        <TabItem x:Name="tabMyList" Header="MY LIST" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-2,0,0,0" Foreground="White" FontWeight="Bold" Width="100" Height="40" PreviewMouseLeftButtonUp="btnMyList_Click" FontSize="16">
+                            <Grid Background="#FF111111" Margin="-2,-8,-4,-5">
+
+                                <!-- BUTTONS_LEFT -->
+                                <StackPanel Margin="10,634,16,10" Orientation="Horizontal" Width="1258.3">
+                                    <Button x:Name="btnTopDrawerView" Style="{DynamicResource btnCenter}" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Top}" Content="SELECT LIST" HorizontalAlignment="Left" VerticalAlignment="Top" Width="122" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="5,0,0,0" Click="btnTopDrawerView_Click"/>
+                                    <TextBlock x:Name="whatListSelectedtb" Foreground="White" Margin="10,0,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Medium" MaxWidth="475"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,634,15,10" Height="41">
+                                    <Button x:Name="btnSortByTitle" Style="{DynamicResource btnCenter}" Content="SORT BY TITLE" Width="150" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="5,0,0,0" Click="btnSortByTitle_Click"/>
+                                    <Button x:Name="btnSortByScore" Style="{DynamicResource btnCenter}" Content="SORT BY SCORE" Width="150" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Click="btnSortByScore_Click" Margin="5,0,0,0"/>
+                                    <Button x:Name="btnSortByType" Style="{DynamicResource btnCenter}" Content="SORT BY TYPE" Width="150" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="5,0,0,0" Click="btnSortByType_Click"/>
+                                    <Button x:Name="btnSortByEpisodes" Style="{DynamicResource btnCenter}" Content="SORT BY EPISODES" Width="150" Height="40" FontSize="16" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" FontWeight="Medium" Margin="5,0,0,0" Click="btnSortByEpisodes_Click"/>
+
+                                </StackPanel>
+
+                                <!-- BUTTON_FOR_RIGHT_DRAWER -->
+                                <Button x:Name="btnEdit" Style="{DynamicResource btnLeft}" Height="Auto" Margin="1192,620,16.4,13.6" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Right}" Content="EDIT" Foreground="#DDFFFFFF" FontWeight="Medium" FontSize="16" Visibility="Collapsed"/>
+
+                                <!-- TABS_WITH_LISTS -->
+                                <TabControl x:Name="watchList" HorizontalAlignment="Left" Height="595" Margin="10,34,0,0" VerticalAlignment="Top" Background="#FF111111" BorderThickness="0" Width="1258">
+
+                                    <!-- CURRENTLY_WATCHING_LIST -->
+                                    <TabItem Header="currentlyWatching" Visibility="Hidden">
+                                        <Grid>
+                                            <DataGrid x:Name="myListCurrentlyWatching" ItemsSource="{Binding}" IsReadOnly="True" FontWeight="Medium" FontSize="16" Background="#FF111111" HorizontalScrollBarVisibility="Disabled" Focusable="False" CanUserResizeColumns="False" BorderBrush="{x:Null}" PreviewMouseLeftButtonUp="myList_PreviewMouseLeftButtonUp" SelectionMode="Single" Height="540" CanUserSortColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Visibility="Collapsed"/>
+                                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="800"/>
+                                                    <DataGridTextColumn Header="Score" Binding="{Binding Score}" Width="150"/>
+                                                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="150"/>
+                                                    <DataGridTextColumn Header="Episodes" Binding="{Binding Episodes}" Width="150"/>
+                                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Visibility="Collapsed"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Grid>
+                                    </TabItem>
+
+                                    <!-- COMPLETED_LIST -->
+                                    <TabItem Header="completed" Margin="27,-3,-30,1" Visibility="Hidden">
+                                        <Grid>
+                                            <DataGrid x:Name="myListCompleted" ItemsSource="{Binding}" IsReadOnly="True" FontWeight="Medium" FontSize="16" Background="#FF111111" HorizontalScrollBarVisibility="Disabled" Focusable="False" CanUserResizeColumns="False" BorderBrush="{x:Null}" PreviewMouseLeftButtonUp="myList_PreviewMouseLeftButtonUp" SelectionMode="Single" Height="540" CanUserSortColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Visibility="Collapsed"/>
+                                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="800"/>
+                                                    <DataGridTextColumn Header="Score" Binding="{Binding Score}" Width="150"/>
+                                                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="150"/>
+                                                    <DataGridTextColumn Header="Episodes" Binding="{Binding Episodes}" Width="150"/>
+                                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Visibility="Collapsed"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Grid>
+                                    </TabItem>
+
+                                    <!-- ON-HOLD_LIST -->
+                                    <TabItem Header="onHold" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="54" Margin="54,0,-54,0" Visibility="Hidden">
+                                        <Grid>
+                                            <DataGrid x:Name="myListOnHold" ItemsSource="{Binding}" IsReadOnly="True" FontWeight="Medium" FontSize="16" Background="#FF111111" HorizontalScrollBarVisibility="Disabled" Focusable="False" CanUserResizeColumns="False" BorderBrush="{x:Null}" PreviewMouseLeftButtonUp="myList_PreviewMouseLeftButtonUp" SelectionMode="Single" Height="540" CanUserSortColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Visibility="Collapsed"/>
+                                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="800"/>
+                                                    <DataGridTextColumn Header="Score" Binding="{Binding Score}" Width="150"/>
+                                                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="150"/>
+                                                    <DataGridTextColumn Header="Episodes" Binding="{Binding Episodes}" Width="150"/>
+                                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Visibility="Collapsed"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Grid>
+                                    </TabItem>
+
+                                    <!-- DROPPED_LIST -->
+                                    <TabItem Header="dropped" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="66" Margin="72,-3,-84,0" Visibility="Hidden">
+                                        <Grid>
+                                            <DataGrid x:Name="myListDropped" ItemsSource="{Binding}" IsReadOnly="True" FontWeight="Medium" FontSize="16" Background="#FF111111" HorizontalScrollBarVisibility="Disabled" Focusable="False" CanUserResizeColumns="False" BorderBrush="{x:Null}" PreviewMouseLeftButtonUp="myList_PreviewMouseLeftButtonUp" SelectionMode="Single" Height="540" CanUserSortColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Visibility="Collapsed"/>
+                                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="800"/>
+                                                    <DataGridTextColumn Header="Score" Binding="{Binding Score}" Width="150"/>
+                                                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="150"/>
+                                                    <DataGridTextColumn Header="Episodes" Binding="{Binding Episodes}" Width="150"/>
+                                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Visibility="Collapsed"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Grid>
+                                    </TabItem>
+
+                                    <!-- PLAN-TO-WATCH_LIST -->
+                                    <TabItem Header="planToWatch" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="82" Margin="90,-2,-118,0" Visibility="Hidden">
+                                        <Grid>
+                                            <DataGrid x:Name="myListPlanToWatch" ItemsSource="{Binding}" IsReadOnly="True" FontWeight="Medium" FontSize="16" Background="#FF111111" HorizontalScrollBarVisibility="Disabled" Focusable="False" CanUserResizeColumns="False" BorderBrush="{x:Null}" PreviewMouseLeftButtonUp="myList_PreviewMouseLeftButtonUp" SelectionMode="Single" Height="540" CanUserSortColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Visibility="Collapsed"/>
+                                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="800"/>
+                                                    <DataGridTextColumn Header="Score" Binding="{Binding Score}" Width="150"/>
+                                                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="150"/>
+                                                    <DataGridTextColumn Header="Episodes" Binding="{Binding Episodes}" Width="150"/>
+                                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Visibility="Collapsed"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Grid>
+                                    </TabItem>
+                                </TabControl>
+
+                                <!-- HEADER_LIST_SELECTOR -->
+                                <Grid HorizontalAlignment="Left" Height="50" Margin="0,6,0,0" VerticalAlignment="Top" Width="1278">
+                                    <materialDesign:ColorZone  Mode="PrimaryMid" VerticalAlignment="Top" HorizontalContentAlignment="Center" Background="{DynamicResource PrimaryHueDarkBrush}" Height="47" Margin="-2,2,0,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="rbCurrentlyWatching" Style="{StaticResource MaterialDesignTabRadioButton}" Content="Currently Watching (0)" Checked="rbCurrentlyWatching_Checked" Foreground="White" FontSize="18" Height="Auto" Background="{DynamicResource PrimaryHueDarkBrush}" Padding="30,4" FontWeight="Bold" Margin="0,0,0,-2"/>
+                                            <RadioButton x:Name="rbCompleted" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="False" Content="Completed (0)" Checked="rbCompleted_Checked" Foreground="White" FontSize="18" Height="Auto" Background="{DynamicResource PrimaryHueDarkBrush}" Padding="30,4" FontWeight="Bold" Margin="0,0,0,-2" />
+                                            <RadioButton x:Name="rbOnHold" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="False" Content="On Hold (0)" Checked="rbOnHold_Checked" Foreground="White" FontSize="18" Height="Auto" Background="{DynamicResource PrimaryHueDarkBrush}" Padding="30,4" FontWeight="Bold" Margin="0,0,0,-2"/>
+                                            <RadioButton x:Name="rbDropped" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="False" Content="Dropped (0)" Checked="rbDropped_Checked" Foreground="White" FontSize="18" Height="Auto"  Background="{DynamicResource PrimaryHueDarkBrush}" Padding="30,4" FontWeight="Bold" Margin="0,0,0,-2"/>
+                                            <RadioButton x:Name="rbPlanToWatch" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="False" Content="Plan to Watch (0)" Checked="rbPlanToWatch_Checked" Foreground="White" FontSize="18" Height="Auto"  Background="{DynamicResource PrimaryHueDarkBrush}" Padding="30,4" FontWeight="Bold" Margin="0,0,0,-2"/>
+                                        </StackPanel>
+                                    </materialDesign:ColorZone>
+                                </Grid>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- NEWS_TAB -->
+                        <TabItem x:Name="tabNews" Header="NEWS" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" Width="100" Height="40" PreviewMouseLeftButtonUp="btnNews_Click" FontSize="16" Margin="-2,0,0,0">
+                            <ScrollViewer x:Name="NewsscrollViewer" Margin="-2,0,-4,-5" Background="#FF111111" Foreground="White">
+                                <StackPanel x:Name="NewsList" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF111111" Width="1280">
+                                    <Label Content="Please Wait" FontWeight="Bold" FontSize="48" Height="80" Margin="468,250,495,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="317"/>
+                                    <Label Content="Loading the latest news..." FontWeight="Bold" FontSize="24" Height="211" Margin="468,-15,518,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <!-- TORRENT_TAB -->
+                        <TabItem x:Name="tabTorrent" Header="TORRENT" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-2,0,0,0" Foreground="White" FontWeight="Bold" Width="100" Height="40" PreviewMouseLeftButtonUp="btnTorrent_Click" FontSize="16">
+                            <Grid Background="#FF111111" Margin="-1,0,-4,-5">
+
+                                <!-- MAIN_LIST -->
+                                <DataGrid x:Name="torrentDataGrid" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="600" Margin="12,69,0,0" VerticalAlignment="Top" Width="1253" IsReadOnly="True" FontWeight="Medium" FontSize="16" Background="#FF18191A" HorizontalScrollBarVisibility="Disabled" Focusable="False" CanUserResizeColumns="False" BorderBrush="{x:Null}" EnableRowVirtualization="False" CanUserSortColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding title}" Width="780"/>
+                                        <DataGridTextColumn Header="Release Date" Binding="{Binding pubDate}" Width="210"/>
+                                        <DataGridTextColumn Header="Size" Binding="{Binding size}" Width="130"/>
+                                        <DataGridTextColumn Header="SE/LE" Binding="{Binding seed}" Width="130"/>
+                                        <DataGridTextColumn Header="Link" Binding="{Binding link}" Visibility="Collapsed"/>
+                                        <materialDesign:DataGridTextColumn/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- OTHER_ELEMENTS -->
+                                <Button x:Name="btnTorrentSelected" Style="{DynamicResource btnLeft}" Content="Download Selected" HorizontalAlignment="Left" Margin="1071,14,0,0" VerticalAlignment="Top" Width="194" Height="43" FontSize="18" Click="btnTorrentSelected_Click" BorderBrush="Black" Foreground="#DDFFFFFF" FontWeight="Medium" BorderThickness="2"/>
+                                <ComboBox x:Name="cbTorrentResolution" HorizontalAlignment="Left" Margin="335,18,0,0" VerticalAlignment="Top" Width="175" Foreground="White" Height="33" SelectedIndex="3" FontWeight="Medium" FontSize="16" Padding="5,6,0,6">
+                                    <ComboBoxItem Content="1080p"/>
+                                    <ComboBoxItem Content="720p"/>
+                                    <ComboBoxItem Content="480p"/>
+                                    <ComboBoxItem Content="Any Resolution"/>
+                                </ComboBox>
+                                <ComboBox x:Name="cbTorrentSite" HorizontalAlignment="Left" Margin="525,18,0,0" VerticalAlignment="Top" Width="175" Foreground="White" Height="33" SelectedIndex="8" FontWeight="Medium" FontSize="16" Padding="5,6,0,6">
+                                    <ComboBoxItem Content="SubsPlease"/>
+                                    <ComboBoxItem Content="HorribleSubs"/>
+                                    <ComboBoxItem Content="Judas"/>
+                                    <ComboBoxItem Content="Erai-raws"/>
+                                    <ComboBoxItem Content="Anime Land"/>
+                                    <ComboBoxItem Content="Raze"/>
+                                    <ComboBoxItem Content="EMBER"/>
+                                    <ComboBoxItem Content="IceBlue"/>
+                                    <ComboBoxItem Content="Any Site"/>
+                                </ComboBox>
+                                <TextBox x:Name="tbTorrentSearch" HorizontalAlignment="Left" Height="33" Margin="16,18,0,0" TextWrapping="Wrap" materialDesign:HintAssist.Hint="Search torrent..." VerticalAlignment="Top" Width="300" Foreground="White" FontSize="16" FontWeight="Medium" PreviewKeyDown="tbTorrentSearch_PreviewKeyDown" Padding="5,0,0,0"/>
+                                <Button x:Name="btnTorrentSearch" Style="{DynamicResource btnLeft}" Content="Search for Torrent" HorizontalAlignment="Left" Margin="883,14,0,0" VerticalAlignment="Top" Width="183" Height="43" FontSize="18" BorderBrush="Black" Click="btnTorrentSearch_Click" Foreground="#DDFFFFFF" FontWeight="Medium" BorderThickness="2"/>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- SEASON_TAB -->
+                        <TabItem x:Name="seasonTab" Header="SEASONS" Margin="-2,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" Height="40" FontSize="16" Width="100">
+                            <Grid Background="#FF111111" Margin="-2,0,-4,-5">
+                                <TabControl x:Name="seasonTabControl" HorizontalAlignment="Left" Height="656" VerticalAlignment="Top" Background="#FF111111" BorderThickness="0" Width="1276" Margin="0,21,0,0" SelectedIndex="3">
+                                    
+                                    <!-- SCHEDULE_TAB -->
+                                    <TabItem Header="CurrentSeason" Visibility="Hidden">
+                                        <Grid>
+                                            <ScrollViewer x:Name="scheduleScrollViewer">
+                                                <StackPanel x:Name="schedule_Panel" Orientation="Vertical" Margin="15,0,0,0">
+                                                    <StackPanel x:Name="spMonday" Background="{DynamicResource PrimaryHueDarkBrush}" Height="50" Margin="0,0,0,10">
+                                                        <Label Content="Monday" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="24" Margin="0,5,0,0"/>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_Monday" Width="1246"/>
+
+                                                    <StackPanel x:Name="spTuesday" Background="{DynamicResource PrimaryHueDarkBrush}" Height="50" Margin="0,10,0,10">
+                                                        <Label Content="Tuesday" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="24" Margin="0,5,0,0"></Label>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_Tuesday" Width="1246"/>
+
+                                                    <StackPanel x:Name="spWednesday" Background="{DynamicResource PrimaryHueDarkBrush}" Height="50" Margin="0,10,0,10">
+                                                        <Label Content="Wednesday" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="24" Margin="0,5,0,0"></Label>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_Wednesday" Width="1246"/>
+
+                                                    <StackPanel x:Name="spThursday" Background="{DynamicResource PrimaryHueDarkBrush}" Height="50" Margin="0,10,0,10">
+                                                        <Label Content="Thursday" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="24" Margin="0,5,0,0"></Label>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_Thursday" Width="1246"/>
+
+                                                    <StackPanel x:Name="spFriday" Background="{DynamicResource PrimaryHueDarkBrush}" Height="50" Margin="0,10,0,10">
+                                                        <Label Content="Friday" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="24" Margin="0,5,0,0"></Label>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_Friday" Width="1246"/>
+
+                                                    <StackPanel x:Name="spSaturday" Background="{DynamicResource PrimaryHueDarkBrush}" Height="50" Margin="0,10,0,10">
+                                                        <Label Content="Saturday" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="24" Margin="0,5,0,0"></Label>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_Saturday" Width="1246"/>
+
+                                                    <StackPanel x:Name="spSunday" Background="{DynamicResource PrimaryHueDarkBrush}" Height="50" Margin="0,10,0,10">
+                                                        <Label Content="Sunday" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="24" Margin="0,5,0,0"></Label>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_Sunday" Width="1246"/>
+
+                                                    <StackPanel x:Name="spOther" Background="{DynamicResource PrimaryHueDarkBrush}" Height="50" Margin="0,10,0,10">
+                                                        <Label Content="Other" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="24" Margin="0,5,0,0"></Label>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_Other" Width="1246"/>
+
+                                                    <StackPanel x:Name="spUnknown" Background="{DynamicResource PrimaryHueDarkBrush}" Height="50" Margin="0,10,0,10">
+                                                        <Label Content="Unknown" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="24" Margin="0,5,0,0"></Label>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_Unknown" Width="1246"/>
+                                                </StackPanel>
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </TabItem>
+
+                                    <!-- BROWSE_SEASONS_TAB -->
+                                    <TabItem Header="BrowseSeasons" Visibility="Hidden">
+                                        <Grid>
+                                            <ScrollViewer>
+                                                <StackPanel x:Name="selectedSeason_Panel" Orientation="Vertical" Margin="20,0,0,0">
+                                                    <StackPanel Height="50" Margin="0,10,0,0" Orientation="Horizontal">
+                                                        <TextBlock x:Name="whatSeason_TextBox" FontSize="20" Foreground="White" VerticalAlignment="Center" Margin="15,0,0,0" MinWidth="700" Width="700"/>
+                                                        <TextBlock Text="Select:" VerticalAlignment="Center" Foreground="White" FontWeight="Medium"/>
+                                                        <TextBox Name="seasonYear_tb" materialDesign:HintAssist.Hint="Year" Width="100" Margin="20,0,0,0" Foreground="White" PreviewTextInput="seasonYear_tb_PreviewTextInput" Height="33" Padding="3,1,0,0" VerticalAlignment="Center"/>
+                                                        <ComboBox x:Name="seasonPeriod_ComboBox" materialDesign:HintAssist.Hint="Season" Width="150" Margin="20,0,0,0" Foreground="White" Padding="5,6,0,6">
+                                                            <ComboBoxItem Content="Winter"/>
+                                                            <ComboBoxItem Content="Spring"/>
+                                                            <ComboBoxItem Content="Summer"/>
+                                                            <ComboBoxItem Content="Fall"/>
+                                                        </ComboBox>
+                                                        <Button x:Name="btnSearchSelectedSeason" Style="{DynamicResource btnLeft}" Content="Search Season" Height="43" FontSize="18" BorderBrush="Black" Foreground="#DDFFFFFF" FontWeight="Medium" BorderThickness="2" Margin="20,0,0,0" Width="156" Click="btnSearchSelectedSeason_Click"/>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_SelectedSeason" Margin="0,10,0,0" Width="1246">
+                                                    </WrapPanel>
+                                                </StackPanel>
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </TabItem>
+
+                                    <!-- TOP_ANIME_TAB -->
+                                    <TabItem Header="TopThisSeason" Visibility="Hidden">
+                                        <Grid>
+                                            <ScrollViewer>
+                                                <StackPanel  Orientation="Vertical" Margin="15,0,0,0">
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                        <TextBlock Text="Select a Category:" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" Foreground="White"/>
+                                                        <ComboBox x:Name="topAnimeSelection" materialDesign:HintAssist.Hint="Category" Foreground="White" SelectionChanged="topAnimeSelection_SelectionChanged" Margin="20,10,0,10" Width="300" Padding="8,6,0,6">
+                                                            <ComboBoxItem Content="Airing" FontSize="16" FontWeight="Medium"/>
+                                                            <ComboBoxItem Content="Upcoming" FontSize="16" FontWeight="Medium"/>
+                                                            <ComboBoxItem Content="TV" FontSize="16" FontWeight="Medium"/>
+                                                            <ComboBoxItem Content="Movie" FontSize="16" FontWeight="Medium"/>
+                                                            <ComboBoxItem Content="Most Popular" FontSize="16" FontWeight="Medium"/>
+                                                            <ComboBoxItem Content="Most Favorite" FontSize="16" FontWeight="Medium"/>
+                                                        </ComboBox>
+                                                    </StackPanel>
+                                                    <WrapPanel x:Name="warpPanel_TopThisSeason" Margin="0,10,0,0" Width="1246"/>
+                                                </StackPanel>
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </TabItem>
+
+                                    <!-- EMPTY_DEFAULT_TAB -->
+                                    <TabItem Header="emptyTab" Visibility="Hidden">
+                                        <Grid>
+                                            <Image Source="Images/bgSeasons.png"/>
+                                        </Grid>
+                                    </TabItem>
+                                </TabControl>
+
+                                <!-- HEADER_LIST_SELECTOR -->
+                                <Grid HorizontalAlignment="Left" Height="50" Margin="0,6,0,0" VerticalAlignment="Top" Width="1278">
+                                    <materialDesign:ColorZone  Mode="PrimaryMid" VerticalAlignment="Top" HorizontalContentAlignment="Center" Background="{DynamicResource PrimaryHueDarkBrush}" Height="47" Margin="-2,-6,0,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="titleThisSeason" Style="{StaticResource MaterialDesignTabRadioButton}" Margin="0,0,0,-2" IsChecked="False" Content="This Season's Schedule" BorderBrush="{DynamicResource PrimaryHueLightBrush}" Foreground="White" FontSize="18" Height="Auto" Background="{DynamicResource PrimaryHueDarkBrush}" Width="250" Checked="titleThisSeason_Checked" FontWeight="Bold"/>
+                                            <RadioButton x:Name="titleBrowseSeasons" Style="{StaticResource MaterialDesignTabRadioButton}" Margin="0,0,0,-2" IsChecked="False" Content="Browse Seasons" BorderBrush="{DynamicResource PrimaryHueLightBrush}" Foreground="White" FontSize="18" Height="Auto" Background="{DynamicResource PrimaryHueDarkBrush}" Width="250" Checked="titleBrowseSeasons_Checked" FontWeight="Bold" />
+                                            <RadioButton x:Name="titleTopThisSeason" Style="{StaticResource MaterialDesignTabRadioButton}" Margin="0,0,0,-2" IsChecked="False" Content="Top Anime" BorderBrush="{DynamicResource PrimaryHueLightBrush}" Foreground="White" FontSize="18" Height="Auto" Background="{DynamicResource PrimaryHueDarkBrush}" Width="250" Checked="titleTopThisSeason_Checked" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </materialDesign:ColorZone>
+                                </Grid>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- PREVIEW_TAB -->
+                        <TabItem x:Name="previewTab" Header="PREVIEW" Margin="-2,0,-100,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" Height="40" FontSize="16">
+                            <Grid Background="#FF111111" Margin="-2,0,-4,-5">
+                                <Image x:Name="selectedImage" HorizontalAlignment="Left" Height="344" Margin="10,25,0,0" VerticalAlignment="Top" Width="244" Stretch="Fill"/>
+
+                                <!-- TAB_STYLE_AND_DESCRIPTION_RELATED_MUSIC -->
+                                <TabControl x:Name="descriptionTab" Margin="10,346,0,0" VerticalAlignment="Top" Background="#FF18191A" BorderThickness="0" Width="974" HorizontalAlignment="Left" Height="313">
+                                    <TabControl.Resources>
+                                        <Style TargetType="TabItem">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="TabItem">
+                                                        <Border Name="Border" BorderThickness="1" BorderBrush="Black" Margin="0,0" Cursor="Hand">
+                                                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsSelected" Value="True">
+                                                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsSelected" Value="False">
+                                                                <Setter TargetName="Border" Property="Background" Value="#3a3b3c" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </TabControl.Resources>
+
+                                    <!-- DESCRIPTION -->
+                                    <TabItem Margin="260,0,-284,0" Background="{DynamicResource PrimaryHueDarkBrush}" BorderBrush="Black">
+                                        <TabItem.Header>
+                                            <Label Height="26" Content="DESCRIPTION" FontSize="16" FontWeight="Bold" Foreground="White" Margin="0,-4,0,0" />
+                                        </TabItem.Header>
+                                        <ScrollViewer Margin="5,-2,-2,-2">
+                                            <Grid x:Name="selectedSynopsis"/>
+                                        </ScrollViewer>
+                                    </TabItem>
+
+                                    <!-- RELATED -->
+                                    <TabItem Margin="425,0,-462,0" Background="{DynamicResource PrimaryHueDarkBrush}" BorderBrush="Black">
+                                        <TabItem.Header>
+                                            <Label Height="26" Content="MUSIC" FontSize="16" FontWeight="Bold" Foreground="White" Margin="0,-4,0,0" />
+                                        </TabItem.Header>
+                                        <ScrollViewer x:Name="musicScrollViewer" Margin="5,-2,-2,-2">
+                                            <Grid x:Name="musicList"/>
+                                        </ScrollViewer>
+                                    </TabItem>
+
+                                    <!-- MUSIC -->
+                                    <TabItem HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="143" Background="{DynamicResource PrimaryHueDarkBrush}" BorderBrush="Black" Margin="202,0,-202,0">
+                                        <TabItem.Header>
+                                            <Label Height="26" Content="RELATED" FontSize="16" FontWeight="Bold" Foreground="White" Margin="0,-4,0,0"/>
+                                        </TabItem.Header>
+                                        <ScrollViewer x:Name="relatedScrollViewer" Margin="5,-2,-1.6,-2">
+                                            <Grid x:Name="seasonList"/>
+                                        </ScrollViewer>
+                                    </TabItem>
+                                </TabControl>
+
+                                <!-- SELECTED_TEXT_BLOCKS -->
+                                <TextBlock HorizontalAlignment="Left" Margin="265,54,0,0" TextWrapping="Wrap" Text="Japanese Title:" VerticalAlignment="Top" Width="132" FontSize="20" Foreground="#FFBDBDBD" Height="27" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedTitle_Japanese" HorizontalAlignment="Left" Margin="402,54,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top" Width="850" FontSize="20" MaxWidth="850" MaxHeight="27" Foreground="White" FontWeight="Bold"/>
+                                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Type:" VerticalAlignment="Top" TextAlignment="Left" Width="43" FontSize="18" Height="30" Foreground="#FFBDBDBD" Margin="265,96,0,0" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedType" HorizontalAlignment="Left" Margin="313,96,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top" Width="671" FontSize="18" Height="30" Foreground="White" MaxWidth="671" FontWeight="Bold"/>
+                                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Score:" VerticalAlignment="Top" Width="51" FontSize="18" Height="30" Foreground="#FFBDBDBD" Margin="265,120,0,0" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedScore" HorizontalAlignment="Left" Margin="321,120,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top" Width="663" FontSize="18" Height="30" Foreground="White" MaxWidth="663" FontWeight="Bold"/>
+                                <TextBlock x:Name="sourceText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Source:" VerticalAlignment="Top"  Width="61" FontSize="18" Height="30" Foreground="#FFBDBDBD" Margin="265,144,0,0" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedSource" HorizontalAlignment="Left" Margin="331,144,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top" Width="653" FontSize="18" Height="30" Foreground="White" MaxWidth="653" FontWeight="Bold"/>
+                                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Aired:" VerticalAlignment="Top"  Width="49" FontSize="18" Height="30" Foreground="#FFBDBDBD" Margin="265,169,0,0" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedDate" HorizontalAlignment="Left" Margin="319,169,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top"  Width="665" FontSize="18" Height="30" Foreground="White" MaxWidth="665" FontWeight="Bold"/>
+                                <TextBlock x:Name="episodesText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Episodes:" VerticalAlignment="Top" Width="76" FontSize="18" Height="30" Foreground="#FFBDBDBD" Margin="265,194,0,0" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedEpisodes" HorizontalAlignment="Left" Margin="346,194,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top"  Width="638" FontSize="18" Height="30" Foreground="White" MaxWidth="638" FontWeight="Bold"/>
+                                <TextBlock x:Name="ratingText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Rating:" VerticalAlignment="Top"  Width="58" FontSize="18" Height="30" Margin="265,219,0,0" Foreground="#FFBDBDBD" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedRating" HorizontalAlignment="Left" Margin="328,219,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top"  Width="656" FontSize="18" Height="30" Foreground="White" MaxWidth="656" FontWeight="Bold"/>
+                                <TextBlock x:Name="ratingText_Copy" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Studio:" VerticalAlignment="Top"  Width="57" FontSize="18" Height="30" Margin="265,244,0,0" Foreground="#FFBDBDBD" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedStudio" HorizontalAlignment="Left" Margin="328,244,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top"  Width="924" FontSize="18" Height="30" Foreground="White" MaxWidth="924" FontWeight="Bold"/>
+                                <TextBlock x:Name="ratingText_Copy1" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Genre:" VerticalAlignment="Top"  Width="54" FontSize="18" Height="30" Margin="265,269,0,0" Foreground="#FFBDBDBD" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedGenre" HorizontalAlignment="Left" Margin="324,269,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top"  Width="928" FontSize="18" Height="75" Foreground="White" MaxWidth="928" FontWeight="Bold"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="265,28,0,0" TextWrapping="Wrap" Text="English Title:" VerticalAlignment="Top" Width="120" FontSize="20" Foreground="#FFBDBDBD" Height="27" FontWeight="Medium"/>
+                                <TextBlock x:Name="selectedTitle_English" HorizontalAlignment="Left" Margin="390,28,0,0" TextWrapping="Wrap" Text="TBA" VerticalAlignment="Top" Width="862" FontSize="20" MaxWidth="862" MaxHeight="27" Foreground="White" FontWeight="Bold"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="1000,346,0,0" TextWrapping="Wrap" Text="More options:" VerticalAlignment="Top" Width="162" FontSize="20" Foreground="White" Height="28" FontWeight="Medium"/>
+
+                                <!-- MAIN_BUTTONS -->
+                                <StackPanel Orientation="Vertical" Margin="989,376,10,173">
+                                    <Button x:Name="btnTrailer" Style="{DynamicResource btnLeft}" Content="Watch Trailer" BorderThickness="1" BorderBrush="#CC000000" Foreground="White" Height="40" FontSize="18" FontWeight="Medium" Margin="0,2,0,0" Click="btnTrailer_Click"/>
+                                    <Button x:Name="btnMyAnimeList" Style="{DynamicResource btnLeft}" Content="See on MyAnimeList" BorderThickness="1" BorderBrush="#CC000000" Foreground="White" Height="40" Click="btnMal_Click" FontSize="18" FontWeight="Medium" Margin="0,2,0,0"/>
+                                    <Button x:Name="btnAddToList" Style="{DynamicResource btnLeft}" Content="Add to your List" BorderThickness="1" BorderBrush="#CC000000" Foreground="White" Height="40" FontSize="18" FontWeight="Medium" Margin="0,2,0,0" Click="btnAddToList_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- NO_INTERNET_TAB -->
+                        <TabItem Header="TabItem" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="64" Visibility="Hidden">
+                            <Grid Background="#FF171717">
+                                <Image x:Name="internetImage" HorizontalAlignment="Left" VerticalAlignment="Top" Source="Images/internet.png" Stretch="UniformToFill" Height="537" Width="952" Margin="35,22,0,0"></Image>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </materialDesign:DrawerHost>
+        </materialDesign:DialogHost>
+    </Grid>
+</Window>
